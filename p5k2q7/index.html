@@ -48,6 +48,8 @@
       width:390px;height:844px;border-radius:46px;border:3px solid #101215;
       box-shadow:0 26px 70px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.25);
     }
+    .device .editor{position:absolute} /* keep the drawer inside the preview frame */
+    .device .editor-panel{max-height:88%}
   }
   body.bare{background:#fff;display:block;overflow:auto;height:auto;min-height:100%}
   body.bare .device{border:0;border-radius:0;box-shadow:none;width:390px;height:844px;margin:0 auto}
@@ -125,6 +127,10 @@
   .brand-name{
     flex:1;text-align:center;font-size:17px;font-weight:700;color:#12203a;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.2px;
+  }
+  /* long-press / triple-tap targets for the editor: no text selection or callout */
+  .brand-name,.pagebar .title,.detailbar .title,.balance,.appbar,.pagebar,.detailbar{
+    -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:manipulation;
   }
   .pagebar{display:flex;align-items:center;padding:8px 16px 6px;gap:8px}
   .pagebar .title{flex:1;text-align:center;font-size:19px;font-weight:700;color:#22262b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -356,37 +362,43 @@
   .hair{height:1px;background:#c9cfd6;margin:18px 30px 0}
 
   /* ---------- editor ---------- */
-  .editor{position:absolute;inset:0;z-index:90;background:rgba(8,14,26,.45);opacity:0;pointer-events:none;transition:opacity .2s}
+  .editor{position:fixed;inset:0;z-index:90;background:rgba(8,14,26,.45);opacity:0;pointer-events:none;transition:opacity .2s}
   .editor.open{opacity:1;pointer-events:auto}
   .editor-panel{
-    position:absolute;left:0;right:0;bottom:0;max-height:88%;background:#101826;color:#e7edf5;
+    position:absolute;left:0;right:0;bottom:0;
+    max-height:min(92%, calc(100dvh - 10px));
+    background:#101826;color:#e7edf5;
     border-radius:16px 16px 0 0;transform:translateY(104%);transition:transform .28s cubic-bezier(.3,.9,.3,1);
     display:flex;flex-direction:column;font-size:13px;
   }
   .editor.open .editor-panel{transform:translateY(0)}
   .editor-head{display:flex;align-items:center;padding:16px 18px 10px;border-bottom:1px solid #1e2a3d;gap:8px}
   .editor-head b{font-size:15px;letter-spacing:.3px}
-  .editor-head .hint{color:#7b8ca4;font-size:11px;margin-left:auto}
-  .editor-head button{background:#1c2a3f;color:#cfe0f5;border:0;border-radius:7px;padding:6px 10px;font-size:12px}
-  .editor-body{overflow-y:auto;padding:14px 18px 26px}
+  .editor-head .hint{color:#7b8ca4;font-size:11px;margin-left:auto;transition:color .2s}
+  .editor-head .hint.saved{color:#5fd39a}
+  .editor-head button{background:#1c2a3f;color:#cfe0f5;border:0;border-radius:7px;padding:9px 14px;font-size:14px}
+  .editor-body{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:14px 18px calc(28px + var(--sab))}
   .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
   .field label{color:#8ba0ba;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px}
   .field input,.field select{
     background:#1a2637;border:1px solid #26374f;color:#eaf1fa;border-radius:8px;
-    padding:9px 11px;font-size:14px;width:100%;
+    padding:10px 11px;font-size:16px;width:100%;
   }
   .field input:focus,.field select:focus{outline:none;border-color:#3b74b8}
   .two{display:flex;gap:10px}
   .two .field{flex:1}
   .txlist{margin:6px 0 10px;border-top:1px solid #1e2a3d}
-  .txrow{display:flex;align-items:center;gap:5px;padding:8px 0;border-bottom:1px solid #1a2536}
-  .txrow .nm{flex:1;min-width:0}
-  .txrow .nm-in{width:100%}
-  .txrow .amt-in{width:76px;text-align:right}
-  .txrow .day-in{width:46px;text-align:center}
-  .txrow .mini{background:#243347;border:0;color:#a9c2de;border-radius:6px;width:24px;height:26px;font-size:12px;padding:0}
+  .txrow{padding:10px 0 12px;border-bottom:1px solid #1a2536}
+  .txrow .r1{margin-bottom:7px}
+  .txrow .r2{display:flex;align-items:center;gap:6px}
+  .txrow .tag{font-size:11px;color:#7b8ca4;flex:0 0 auto}
+  .txrow .nm-in{width:100%;min-width:0}
+  .txrow .amt-in{width:84px;text-align:right;flex:0 0 auto}
+  .txrow .day-in{width:54px;text-align:center;flex:0 0 auto}
+  .txrow .gap{flex:1}
+  .txrow .mini{background:#243347;border:0;color:#a9c2de;border-radius:6px;width:34px;height:36px;font-size:15px;padding:0}
   .txrow .del{background:#3a2130;color:#f0a3bb}
-  .txrow input{background:#1a2637;border:1px solid #26374f;color:#eaf1fa;border-radius:6px;padding:6px 7px;font-size:12.5px}
+  .txrow input{background:#1a2637;border:1px solid #26374f;color:#eaf1fa;border-radius:6px;padding:8px 7px;font-size:16px}
   .chk{display:flex;align-items:center;gap:4px;color:#8ba0ba;font-size:10.5px;white-space:nowrap}
   .btnrow{display:flex;gap:8px;margin-top:12px}
   .btnrow button{flex:1;background:#1d62a8;color:#fff;border:0;border-radius:8px;padding:11px;font-size:13px}
@@ -525,7 +537,7 @@
     <div class="editor-panel">
       <div class="editor-head">
         <b>Edit data</b>
-        <span class="hint">triple-tap clock / press E</span>
+        <span class="hint">saves automatically</span>
         <button data-act="close-editor">Done</button>
       </div>
       <div class="editor-body" id="editorBody">
@@ -1380,18 +1392,48 @@ function closeEditor() { $('#editor').classList.remove('open'); }
 function renderTxEditor() {
   $('#txEdits').innerHTML = state.transactions.map((t, i) => `
     <div class="txrow" data-id="${t.id}">
-      <input class="nm-in" data-tx="name" value="${esc(t.name)}" placeholder="Merchant">
-      <input class="amt-in" data-tx="amount" type="number" step="0.01" value="${t.amount}">
-      <input class="day-in" data-tx="daysAgo" type="number" min="0" step="1" value="${t.daysAgo || 0}" title="days ago">
-      <label class="chk"><input type="checkbox" data-tx="pending" ${t.pending ? 'checked' : ''}>P</label>
-      <button class="mini" data-tx="up" ${i === 0 ? 'disabled' : ''}>↑</button>
-      <button class="mini" data-tx="down" ${i === state.transactions.length - 1 ? 'disabled' : ''}>↓</button>
-      <button class="mini del" data-tx="del">×</button>
+      <div class="r1">
+        <input class="nm-in" data-tx="name" value="${esc(t.name)}" placeholder="Merchant" autocapitalize="characters">
+      </div>
+      <div class="r2">
+        <span class="tag">£</span>
+        <input class="amt-in" data-tx="amount" type="number" step="0.01" inputmode="decimal" value="${t.amount}">
+        <input class="day-in" data-tx="daysAgo" type="number" min="0" step="1" inputmode="numeric" value="${t.daysAgo || 0}">
+        <span class="tag">days ago</span>
+        <label class="chk"><input type="checkbox" data-tx="pending" ${t.pending ? 'checked' : ''}>pending</label>
+        <span class="gap"></span>
+        <button class="mini" data-tx="up" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button class="mini" data-tx="down" ${i === state.transactions.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="mini del" data-tx="del">×</button>
+      </div>
     </div>`).join('') || '<div style="color:#6d86a4;padding:12px 0">No transactions</div>';
 }
 
-/* ---------------- persistence ---------------- */
-function save() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {} }
+/* ---------------- persistence (browser storage, per device) ---------------- */
+let saveFailWarned = false;
+function flashSaved() {
+  const h = document.querySelector('.editor-head .hint');
+  if (!h) return;
+  h.textContent = 'Saved ✓';
+  h.classList.add('saved');
+  clearTimeout(flashSaved.t);
+  flashSaved.t = setTimeout(() => {
+    h.textContent = 'saves automatically';
+    h.classList.remove('saved');
+  }, 1200);
+}
+function save() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    flashSaved();
+  } catch (e) {
+    const h = document.querySelector('.editor-head .hint');
+    if (h) { h.textContent = 'not saving (private mode)'; h.classList.remove('saved'); }
+    if (!saveFailWarned) { saveFailWarned = true; toast('Browser storage is blocked — open in a normal tab'); }
+  }
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
+window.addEventListener('pagehide', save);
 function renderChrome() {
   document.title = state.accountTitle;
 }
@@ -1560,27 +1602,58 @@ $('#txEdits').addEventListener('click', e => {
   renderTxEditor(); renderTop(); save();
 });
 
-/* hidden editor trigger: triple-tap the heading (name / account title / page title),
-   or long-press the balance. Desktop: press E. */
+/* ---- hidden editor triggers (phones first) ----
+   1. long-press (0.6s) the header bar or the balance
+   2. triple-tap the name / title / balance
+   3. desktop: press E
+   4. URL: ?edit=1                                                    */
+const TRIGGER_ZONES = '.appbar, .detailbar, .pagebar, .balance, .brand-name, .title';
+
 let taps = 0, tapTimer = null;
 function countTap() {
   taps++; clearTimeout(tapTimer);
-  tapTimer = setTimeout(() => (taps = 0), 700);
+  tapTimer = setTimeout(() => { taps = 0; }, 650);
   if (taps >= 3) { taps = 0; openEditor(); }
 }
 document.addEventListener('click', e => {
-  if (e.target.closest('.brand-name, .detailbar .title, .pagebar .title, .balance')) countTap();
+  const el = e.target.closest(TRIGGER_ZONES);
+  if (!el || e.target.closest('button, a, input')) return;
+  countTap();
 });
-let pressTimer = null;
+
+let pressTimer = null, pressStart = null, pressMoved = false;
 document.addEventListener('pointerdown', e => {
-  if (!e.target.closest('.balance')) return;
-  pressTimer = setTimeout(openEditor, 800);
+  const el = e.target.closest(TRIGGER_ZONES);
+  if (!el || e.target.closest('button, a, input')) return;
+  pressStart = { x: e.clientX, y: e.clientY };
+  pressMoved = false;
+  clearTimeout(pressTimer);
+  pressTimer = setTimeout(() => { if (!pressMoved) openEditor(); }, 600);
+}, { passive: true });
+document.addEventListener('pointermove', e => {
+  if (!pressStart) return;
+  if (Math.abs(e.clientX - pressStart.x) > 12 || Math.abs(e.clientY - pressStart.y) > 12) {
+    pressMoved = true; clearTimeout(pressTimer);
+  }
+}, { passive: true });
+['pointerup', 'pointercancel', 'pointerleave'].forEach(ev =>
+  document.addEventListener(ev, () => { clearTimeout(pressTimer); pressStart = null; }, { passive: true })
+);
+document.addEventListener('contextmenu', e => {
+  if (e.target.closest(TRIGGER_ZONES)) e.preventDefault();
 });
-document.addEventListener('pointerup', () => clearTimeout(pressTimer));
-document.addEventListener('pointercancel', () => clearTimeout(pressTimer));
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeEditor(); closeSheet(); }
   if ((e.key === 'e' || e.key === 'E') && !/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)) openEditor();
+});
+
+/* keep the field being typed into visible above the on-screen keyboard */
+document.addEventListener('focusin', e => {
+  if (!e.target.closest('.editor')) return;
+  setTimeout(() => {
+    try { e.target.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+  }, 280);
 });
 
 /* init */
